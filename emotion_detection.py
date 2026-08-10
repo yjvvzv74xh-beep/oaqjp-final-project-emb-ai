@@ -1,4 +1,5 @@
-import requests
+import requests, json
+
 #Import the requests library to handle HTTP requests
 
 def emotion_detector(text_to_analyze):
@@ -11,4 +12,17 @@ def emotion_detector(text_to_analyze):
 
     response = requests.post(url, json = myobj, headers = header)
 
-    return response.text
+    formatted_response = json.loads(response.text)
+
+    emotions = formatted_response['emotionPredictions'][0]['emotion']
+
+    output = {
+        'anger': emotions['anger'],
+        'disgust': emotions['disgust'],
+        'fear': emotions['fear'],
+        'joy': emotions['joy'],
+        'sadness': emotions['sadness'],
+        'dominant_emotion': max(emotions, key=emotions.get)
+    }
+
+    print(output)
